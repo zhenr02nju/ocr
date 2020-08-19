@@ -3,18 +3,35 @@ package com.wxct.cxzx.ocr;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jdesktop.swingx.util.OS;
 
-public class OCR {
-    private final String LANG_OPTION = "-l"; // 英文字母小写l，并非数字1
-    private final String EOL = System.getProperty("line.separator");
-    private String tessPath = "E://jobs//Tesseract-OCR";//Tesseract安装路径
+import com.wxct.cxzx.utils.PropertiesHandle;
 
-    public String recognizeText(File imageFile, String imageFormat)
-            throws Exception {
+public class OCR {
+    
+	@SuppressWarnings("unused")
+	private final String LANG_OPTION = "-l"; // 英文字母小写l，并非数字1
+    private final String EOL = System.getProperty("line.separator");
+    private String tessPath;//Tesseract安装路径
+    
+    public OCR() {
+    	//tessPath=OCR.class.getResource("/").toString().replace("file:/", "")+"Tesseract-OCR";
+    	
+    	PropertiesHandle propertiesHandle=new PropertiesHandle();    	    	
+    	try {
+			tessPath=propertiesHandle.readProperties("tess_path","tesseract_path.properties",false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+    }
+
+    public String recognizeText(File imageFile, String imageFormat) throws InterruptedException, IOException {
         File tempImage = ImageIOHelper.createImage(imageFile, imageFormat);
         File outputFile = new File(imageFile.getParentFile(), "output");
         StringBuffer strB = new StringBuffer();
@@ -53,7 +70,9 @@ public class OCR {
             }
             in.close();
         } else {
-            String msg;
+            
+			@SuppressWarnings("unused")
+			String msg;
             switch (w) {
             case 1:
                 msg = "Errors accessing files.There may be spaces in your image's filename.";

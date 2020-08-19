@@ -9,6 +9,7 @@ import java.awt.image.ImageProducer;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -144,6 +145,20 @@ public class ImageIOHelper {
     
     public static BufferedImage imageProducerToBufferedImage(ImageProducer imageProducer) {  
         return imageToBufferedImage(Toolkit.getDefaultToolkit().createImage(imageProducer));  
+    }
+    
+    /**
+     * 图像预处理
+     * */
+    public static File imagePreprocess(InputStream inputStream) throws IOException {
+    	BufferedImage bi1 = ImageIO.read(inputStream);
+        ImageFilter imgFliter = new ImageFilter(bi1);//图像处理
+        BufferedImage bi=imgFliter.changeGrey();//图像二值化
+        imgFliter = new ImageFilter(bi1);
+        bi=imgFliter.median();//中值滤波        
+        imgFliter = new ImageFilter(bi1);
+        bi=imgFliter.lineGrey();//线性灰度变换
+        return createImage(bi);
     }
     
     public static byte[] image_byte_data(BufferedImage image) { 

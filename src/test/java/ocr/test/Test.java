@@ -3,7 +3,7 @@
  */
 package ocr.test;
 
-import com.wxct.cxzx.ocr.ImageIOHelper;
+//import com.wxct.cxzx.ocr.ImageIOHelper;
 
 /*
 import net.sourceforge.tess4j.Tesseract;
